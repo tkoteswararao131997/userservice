@@ -1,7 +1,7 @@
 package com.bridgelabz.userservice.Entity;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -9,10 +9,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
 import lombok.Data;
-
 @Data
 @Entity
 @Table(name="users")
@@ -39,9 +39,9 @@ public class UserEntity implements Serializable{
 	private LocalDateTime updateDate;
 	private boolean isVerifyEmail=false;
 	private String profile;
-//	@OneToMany(cascade = {CascadeType.ALL},fetch = FetchType.LAZY)
-//	@JoinColumn(name="userid")
-//	private List<NoteEntity> notes;
+	@OneToMany(cascade = {CascadeType.ALL},fetch = FetchType.LAZY)
+	@JoinColumn(name="userid")
+	private List<NoteEntity> notes;
 //	
 //	@OneToMany(cascade = {CascadeType.ALL},fetch = FetchType.LAZY)
 //	@JoinColumn(name="userid")

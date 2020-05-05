@@ -3,7 +3,9 @@ package com.bridgelabz.userservice.Configuration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.client.RestTemplate;
 
+import com.bridgelabz.userservice.Entity.NoteEntity;
 import com.bridgelabz.userservice.Entity.UserEntity;
 import com.bridgelabz.userservice.Utility.JwtOperations;
 
@@ -23,5 +25,15 @@ public class AppConfig {
 	public UserEntity userentity()
 	{
 		return new UserEntity();
+	}
+	@Bean
+	public NoteEntity noteentity()
+	{
+		return new NoteEntity();
+	}
+	@Bean
+	public RestTemplate getRestTemplate()
+	{
+		return new RestTemplate();
 	}
 }

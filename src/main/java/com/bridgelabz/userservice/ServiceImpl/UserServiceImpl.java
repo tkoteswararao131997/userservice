@@ -6,10 +6,12 @@ import java.util.List;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.client.RestTemplate;
 
 import com.bridgelabz.userservice.Dto.ForgotPwdDto;
 import com.bridgelabz.userservice.Dto.LoginDto;
@@ -33,6 +35,8 @@ public class UserServiceImpl implements UserServiceInf {
 	private JwtOperations jwt=new JwtOperations();
 	@Autowired
 	private Jms jms;
+	@Autowired
+	private RestTemplate restTemplate;
 	//@Autowired
 	//private RabbitMQSender mailsender;
 	//public static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
@@ -46,10 +50,11 @@ public class UserServiceImpl implements UserServiceInf {
 		entity.setUpdateDate(LocalDateTime.now());
 		entity.setPassword(pwdencoder.encode(entity.getPassword()));
 		entity.setProfile("https://kevin5.s3.ap-south-1.amazonaws.com/commonprofile.png");
-		UserEntity res =userrepo.save(entity);
 		//log.info(entity.getName()+" registered "+"date:"+entity.getCreateDate());
-		String body="http://localhost:8080/verifyemail/"+jwt.jwtToken(entity.getUserid());
-		jms.sendEmail(entity.getEmail(),"verification email",body);
+		restTemplate.exchange("http://localhost:8091/regVerification/"+entity.getEmail(),HttpMethod.GET,null, String.class).getBody();
+//		String body="http://localhost:8080/verifyemail/"+jwt.jwtToken(entity.getUserid());
+//		jms.sendEmail(entity.getEmail(),"verification email",body);
+		UserEntity res =userrepo.save(entity);
 		//mailsender.sendMessage(new Notification(entity.getEmail(),"verification"));
 		return entity;
 	}
@@ -99,7 +104,9 @@ public class UserServiceImpl implements UserServiceInf {
 	
 	public UserEntity getUser(String token) {
 		long id=jwt.parseJWT(token);
-		return userrepo.getUserById(id).orElseThrow(() -> new CustomException("user not exists",HttpStatus.OK,id,"false"));
+		UserEntity user= userrepo.getUserById(id).orElseThrow(() -> new CustomException("user not exists",HttpStatus.OK,id,"false"));
+		System.out.println(user);
+		return user;
 	}
 	@Override
 	public boolean isIdPresent(long id) {
@@ -129,9 +136,14 @@ public class UserServiceImpl implements UserServiceInf {
 	@Override
 	public String forgotPwd(ForgotPwdDto forgotdto) {
 		UserEntity user=getUserByEmail(forgotdto.getEmail());
-		String body="http://localhost:4200/resetpassword/"+jwt.jwtToken(user.getUserid());
-		jms.sendEmail(user.getEmail(),"Reset Password",body);
+		//String body="http://localhost:4200/resetpassword/"+jwt.jwtToken(user.getUserid());
+		restTemplate.exchange("http://localhost:8091/resetPwd/"+user.getEmail()+"/"+jwt.jwtToken(user.getUserid()),HttpMethod.GET,null, String.class).getBody();
+		//jms.sendEmail(user.getEmail(),"Reset Password",body);
 		return "success";
+	}
+	public void saveUser(UserEntity user)
+	{
+		userrepo.save(user);
 	}
 	
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -108,10 +109,18 @@ public class UserController {
 	@GetMapping("/getuserbyid/{userId}")
 	public ResponseEntity<Response> getuserById(@PathVariable("userId") long userId,boolean cacheable)
 	{
+		
 		//System.out.println("Getting user with ID {}."+userId);
 		return new ResponseEntity<Response>(new Response("welcome",userimpl.getUserById(userId,cacheable),200,"true"),HttpStatus.OK);
 	}
-	
+	@GetMapping("/getuser/{token}")
+	public ResponseEntity<Response> getuserByToken(@PathVariable("token") String token)
+	{
+		 Long id=jwt.parseJWT(token);
+		 System.out.println("==========="+id);
+	     UserEntity user=userimpl.getUserById(id);
+		return new ResponseEntity<Response>(new Response("welcome",userimpl.getUser(token),200,"true"),HttpStatus.OK);
+	}
 	@GetMapping("/getuser")
 	public ResponseEntity<Response> getuser(@RequestHeader String token)
 	{
@@ -122,7 +131,7 @@ public class UserController {
 	/**
 	 * Update Password : set new password for user
 	 * @param pwddto
-	 * @return response od update password
+	 * @return response of update password
 	 */
 	@PostMapping("/updatepassword")
 	public ResponseEntity<Response> updatePassword(@RequestBody UpdatePwdDto pwddto,BindingResult result)
@@ -137,7 +146,12 @@ public class UserController {
 		return new ResponseEntity<Response>(new Response("invalid details",null,400,"true"),HttpStatus.BAD_REQUEST);
 		return new ResponseEntity<Response>(new Response("password updated and sent to mail successfully","your new pwd is:"+userimpl.forgotPwd(forgotdto),200,"true"),HttpStatus.OK);
 	}
-	
+	@PutMapping("/saveuser/{user}")
+	public String saveUser(@PathVariable UserEntity user)
+	{
+		userimpl.saveUser(user);
+		return "user saved";
+	}
 //	@PostMapping("/uploadProfile")
 //    public ResponseEntity<Response> uploadFile(@RequestPart(value = "file") MultipartFile file,@RequestHeader String token)
 //    {
