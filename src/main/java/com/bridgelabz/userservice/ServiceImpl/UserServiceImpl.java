@@ -51,10 +51,10 @@ public class UserServiceImpl implements UserServiceInf {
 		entity.setPassword(pwdencoder.encode(entity.getPassword()));
 		entity.setProfile("https://kevin5.s3.ap-south-1.amazonaws.com/commonprofile.png");
 		//log.info(entity.getName()+" registered "+"date:"+entity.getCreateDate());
+		UserEntity res =userrepo.save(entity);
 		restTemplate.exchange("http://localhost:8091/regVerification/"+entity.getEmail(),HttpMethod.GET,null, String.class).getBody();
 //		String body="http://localhost:8080/verifyemail/"+jwt.jwtToken(entity.getUserid());
 //		jms.sendEmail(entity.getEmail(),"verification email",body);
-		UserEntity res =userrepo.save(entity);
 		//mailsender.sendMessage(new Notification(entity.getEmail(),"verification"));
 		return entity;
 	}
@@ -144,6 +144,10 @@ public class UserServiceImpl implements UserServiceInf {
 	public void saveUser(UserEntity user)
 	{
 		userrepo.save(user);
+	}
+	public String getIdByEmail(String email) {
+		UserEntity user=getUserByEmail(email);
+		return jwt.jwtToken(user.getUserid());
 	}
 	
 }

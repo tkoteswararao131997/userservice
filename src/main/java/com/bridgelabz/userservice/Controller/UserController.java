@@ -114,12 +114,12 @@ public class UserController {
 		return new ResponseEntity<Response>(new Response("welcome",userimpl.getUserById(userId,cacheable),200,"true"),HttpStatus.OK);
 	}
 	@GetMapping("/getuser/{token}")
-	public ResponseEntity<Response> getuserByToken(@PathVariable("token") String token)
+	public UserEntity getuserByToken(@PathVariable("token") String token)
 	{
 		 Long id=jwt.parseJWT(token);
 		 System.out.println("==========="+id);
 	     UserEntity user=userimpl.getUserById(id);
-		return new ResponseEntity<Response>(new Response("welcome",userimpl.getUser(token),200,"true"),HttpStatus.OK);
+		return userimpl.getUser(token);
 	}
 	@GetMapping("/getuser")
 	public ResponseEntity<Response> getuser(@RequestHeader String token)
@@ -146,11 +146,10 @@ public class UserController {
 		return new ResponseEntity<Response>(new Response("invalid details",null,400,"true"),HttpStatus.BAD_REQUEST);
 		return new ResponseEntity<Response>(new Response("password updated and sent to mail successfully","your new pwd is:"+userimpl.forgotPwd(forgotdto),200,"true"),HttpStatus.OK);
 	}
-	@PutMapping("/saveuser/{user}")
-	public String saveUser(@PathVariable UserEntity user)
+	@GetMapping("/gettokenbyemail/{email}")
+	public String getIdByEmail(@PathVariable("email") String email)
 	{
-		userimpl.saveUser(user);
-		return "user saved";
+		return userimpl.getIdByEmail(email);
 	}
 //	@PostMapping("/uploadProfile")
 //    public ResponseEntity<Response> uploadFile(@RequestPart(value = "file") MultipartFile file,@RequestHeader String token)
