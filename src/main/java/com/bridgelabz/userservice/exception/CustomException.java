@@ -1,4 +1,4 @@
-package com.bridgelabz.userservice.Exception;
+package com.bridgelabz.userservice.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -12,12 +12,9 @@ public class CustomException extends RuntimeException {
 	private String message;
 	HttpStatus status;
 	private Object data;
-	String statusMsg;
-	public CustomException(String message,HttpStatus status,Object data,String statusMsg) {
+	public CustomException(String message,HttpStatus status,Object data) {
 		this.status=status;
 		this.message=message;
 		this.data=data;
-		this.statusMsg=statusMsg;
-		
 	}
 }

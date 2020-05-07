@@ -1,4 +1,4 @@
-package com.bridgelabz.userservice.Utility;
+package com.bridgelabz.userservice.utility;
 import org.springframework.stereotype.Component;
 
 

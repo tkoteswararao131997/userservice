@@ -1,4 +1,4 @@
-package com.bridgelabz.userservice.Dto;
+package com.bridgelabz.userservice.dto;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;

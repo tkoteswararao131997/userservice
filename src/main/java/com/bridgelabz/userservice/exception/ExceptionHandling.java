@@ -1,4 +1,4 @@
-package com.bridgelabz.userservice.Exception;
+package com.bridgelabz.userservice.exception;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,7 +12,6 @@ public class ExceptionHandling{
 		res.setMessage(ex.getMessage());
 		res.setData(ex.getData());
 		res.setStatus(ex.getStatus());
-		res.setStatusMsg(ex.getStatusMsg());
-		return ResponseEntity.status(res.getStatus()).body(new ExceptionResponse(res.getMessage(),res.getData(),res.getStatus(),res.getStatusMsg()));
+		return ResponseEntity.status(res.getStatus()).body(new ExceptionResponse(res.getMessage(),res.getData(),res.getStatus()));
 	}
 }

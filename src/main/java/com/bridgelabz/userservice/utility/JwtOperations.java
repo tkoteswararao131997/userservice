@@ -1,4 +1,4 @@
-package com.bridgelabz.userservice.Utility;
+package com.bridgelabz.userservice.utility;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 public class JwtOperations {

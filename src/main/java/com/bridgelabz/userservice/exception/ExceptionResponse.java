@@ -1,4 +1,4 @@
-package com.bridgelabz.userservice.Exception;
+package com.bridgelabz.userservice.exception;
 import org.springframework.http.HttpStatus;
 
 import lombok.Data;
@@ -10,12 +10,10 @@ public class ExceptionResponse {
 	String message;
 	HttpStatus status;
 	Object data;
-	String statusMsg;
-		public ExceptionResponse(String message,Object user,HttpStatus status,String statusMsg) 
+		public ExceptionResponse(String message,Object user,HttpStatus status) 
 		{
 		this.message=message;
 		this.data=user;
 		this.status=status;
-		this.statusMsg=statusMsg;
 		}
 }
